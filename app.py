@@ -12,47 +12,50 @@ from streamlit_drawable_canvas import st_canvas
 # ═══════════════════════════════════════════════════════════════
 st.set_page_config(
     page_title='Tablero Inteligente',
-    page_icon='◼',
+    page_icon='◆',
     layout='wide',
     initial_sidebar_state='collapsed',
 )
 
 # ═══════════════════════════════════════════════════════════════
-# ESTILOS — SWISS / INTERNATIONAL TYPOGRAPHIC
+# ESTILOS — BAUHAUS / CONSTRUCTIVISTA
 # ═══════════════════════════════════════════════════════════════
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
     :root {
-        --bg:        #fafafa;
-        --surface:   #ffffff;
-        --ink:       #0a0a0a;
-        --ink-2:     #2a2a2a;
-        --muted:     #757575;
-        --line:      #d4d4d4;
-        --line-hard: #0a0a0a;
-        --red:       #e63329;
-        --red-soft:  #fde8e6;
+        --bg:       #f2ede0;
+        --surface:  #ffffff;
+        --ink:      #0f0f0f;
+        --ink-2:    #2a2a2a;
+        --muted:    #6b6b5f;
+        --line:     #d6cfb8;
+        --red:      #e63946;
+        --yellow:   #ffd400;
+        --blue:     #1d4ed8;
     }
 
     /* ═══ BASE ═══ */
     html, body, [class*="css"], .stApp, button, input, textarea, select {
-        font-family: 'Inter Tight', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
-        color: var(--ink) !important;
-        font-feature-settings: 'ss01', 'cv01';
-    }
-    h1, h2, h3, h4, h5 {
-        font-family: 'Inter Tight', sans-serif !important;
-        font-weight: 800 !important;
-        letter-spacing: -0.035em !important;
+        font-family: 'Inter', sans-serif !important;
         color: var(--ink) !important;
     }
 
+    h1, h2, h3, h4, h5 {
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.03em !important;
+        color: var(--ink) !important;
+    }
+
+    /* ═══ FONDO CON RETÍCULA BAUHAUS ═══ */
     .stApp {
         background-color: var(--bg) !important;
         background-image:
-            linear-gradient(90deg, transparent 0 calc(50% - 0.5px), rgba(10, 10, 10, 0.025) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+            linear-gradient(rgba(15, 15, 15, 0.045) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(15, 15, 15, 0.045) 1px, transparent 1px);
+        background-size: 32px 32px;
     }
 
     #MainMenu { visibility: hidden; }
@@ -68,252 +71,357 @@ st.markdown("""
     /* ═══ SIDEBAR ═══ */
     [data-testid="stSidebar"] {
         background: var(--surface) !important;
-        border-right: 1px solid var(--line-hard) !important;
+        border-right: 3px solid var(--ink) !important;
     }
     [data-testid="stSidebar"] * { color: var(--ink) !important; }
 
     .sb-head {
-        padding-bottom: 1rem;
-        margin-bottom: 1.25rem;
-        border-bottom: 2px solid var(--ink);
+        background: var(--ink);
+        color: #ffffff !important;
+        padding: 0.9rem 1rem;
+        margin: -1rem -1rem 1.5rem -1rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .sb-head::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 36px;
+        height: 36px;
+        background: var(--yellow);
+        clip-path: polygon(100% 0, 0 0, 100% 100%);
     }
     .sb-head .eyebrow {
         font-family: 'JetBrains Mono', monospace;
-        font-size: 0.62rem;
-        letter-spacing: 0.24em;
+        font-size: 0.6rem;
+        letter-spacing: 0.22em;
         text-transform: uppercase;
-        color: var(--red);
+        color: var(--yellow) !important;
         font-weight: 700;
         display: block;
-        margin-bottom: 0.35rem;
+        margin-bottom: 0.3rem;
     }
     .sb-head .title {
-        font-family: 'Inter Tight', sans-serif;
-        font-weight: 800;
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 700;
         font-size: 1.15rem;
-        letter-spacing: -0.03em;
-        line-height: 1;
-        color: var(--ink);
+        letter-spacing: -0.02em;
+        color: #ffffff !important;
+        line-height: 1.1;
     }
 
     [data-testid="stSidebar"] label,
     [data-testid="stSidebar"] [data-testid="stWidgetLabel"] p {
-        font-family: 'JetBrains Mono', monospace !important;
-        font-size: 0.68rem !important;
-        letter-spacing: 0.14em !important;
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-size: 0.75rem !important;
+        letter-spacing: 0.06em !important;
         text-transform: uppercase !important;
-        font-weight: 600 !important;
-        color: var(--ink-2) !important;
+        font-weight: 700 !important;
+        color: var(--ink) !important;
     }
-
     [data-testid="stSidebar"] [data-baseweb="slider"] div[role="slider"] {
-        background-color: var(--ink) !important;
+        background-color: var(--red) !important;
         border-color: var(--ink) !important;
+        border-width: 2px !important;
         border-radius: 0 !important;
+        width: 16px !important;
+        height: 16px !important;
         box-shadow: none !important;
-        width: 14px !important;
-        height: 14px !important;
     }
     [data-testid="stSidebar"] [data-baseweb="slider"] > div > div > div {
         background: var(--ink) !important;
         border-radius: 0 !important;
     }
 
-    /* ═══ TOP BAR ═══ */
-    .topbar {
-        display: grid;
-        grid-template-columns: auto 1fr auto;
+    /* ═══ HEADER BANNER ═══ */
+    .banner {
+        background: var(--ink);
+        color: #ffffff !important;
+        padding: 0.85rem 1.4rem;
+        margin-bottom: 2rem;
+        display: flex;
         align-items: center;
+        justify-content: space-between;
         gap: 1.25rem;
-        padding-bottom: 1rem;
-        border-bottom: 2px solid var(--ink);
-        margin-bottom: 2.5rem;
+        border: 3px solid var(--ink);
+        position: relative;
+        overflow: hidden;
     }
-    .topbar-mark {
+    .banner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 90px;
+        background: repeating-linear-gradient(
+            -45deg,
+            var(--red) 0 12px,
+            var(--ink) 12px 24px
+        );
+    }
+    .banner-left {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        z-index: 1;
+    }
+    .banner-mark {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         width: 34px;
         height: 34px;
-        background: var(--ink);
-        color: #ffffff;
-        font-family: 'Inter Tight', sans-serif;
-        font-weight: 900;
-        font-size: 0.95rem;
-        letter-spacing: -0.02em;
-    }
-    .topbar-title {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.72rem;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
+        background: var(--yellow);
         color: var(--ink);
-        font-weight: 600;
-    }
-    .topbar-meta {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.68rem;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: var(--muted);
-        font-weight: 500;
-        text-align: right;
-    }
-    .topbar-meta .sep {
-        color: var(--red);
-        margin: 0 0.4rem;
+        font-family: 'Space Grotesk', sans-serif;
         font-weight: 700;
+        font-size: 1.05rem;
+        border-radius: 50%;
+        flex-shrink: 0;
     }
-
-    /* ═══ HERO ═══ */
-    .hero-grid {
-        display: grid;
-        grid-template-columns: auto 1fr auto;
-        gap: 2rem;
-        align-items: end;
-        padding-bottom: 2rem;
-        margin-bottom: 2.5rem;
-        border-bottom: 1px solid var(--line);
-    }
-    .hero-num {
-        font-family: 'Inter Tight', sans-serif;
-        font-weight: 900;
-        font-size: 5.5rem;
-        line-height: 0.85;
-        letter-spacing: -0.05em;
-        color: var(--ink);
-        font-feature-settings: 'tnum';
-    }
-    .hero-num .dot {
-        color: var(--red);
-    }
-    .hero-body { padding-bottom: 0.35rem; }
-    .hero-eyebrow {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.68rem;
+    .banner-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 0.85rem;
         letter-spacing: 0.22em;
         text-transform: uppercase;
-        color: var(--red);
         font-weight: 700;
-        margin-bottom: 0.75rem;
-        display: block;
+        color: #ffffff !important;
+    }
+    .banner-meta {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.68rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #ffffff !important;
+        font-weight: 500;
+        z-index: 1;
+        background: var(--ink);
+        padding: 0.3rem 0.7rem;
+        border: 1px solid var(--yellow);
+    }
+    .banner-meta b { color: var(--yellow) !important; }
+
+    /* ═══ HERO CON GEOMETRÍA ═══ */
+    .hero {
+        display: grid;
+        grid-template-columns: 90px 1fr auto;
+        gap: 1.75rem;
+        align-items: start;
+        padding-bottom: 2rem;
+        margin-bottom: 2.5rem;
+        border-bottom: 3px solid var(--ink);
+        position: relative;
+    }
+
+    /* Bloque geométrico a la izquierda */
+    .hero-shape {
+        position: relative;
+        width: 90px;
+        height: 120px;
+    }
+    .hero-shape .circle {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 60px;
+        height: 60px;
+        background: var(--red);
+        border-radius: 50%;
+        border: 3px solid var(--ink);
+    }
+    .hero-shape .square {
+        position: absolute;
+        top: 40px;
+        left: 30px;
+        width: 55px;
+        height: 55px;
+        background: var(--yellow);
+        border: 3px solid var(--ink);
+        mix-blend-mode: multiply;
+    }
+    .hero-shape .triangle {
+        position: absolute;
+        bottom: 0;
+        left: 5px;
+        width: 0;
+        height: 0;
+        border-left: 28px solid transparent;
+        border-right: 28px solid transparent;
+        border-bottom: 45px solid var(--blue);
+    }
+
+    .hero-body { padding-top: 0.35rem; }
+    .hero-eyebrow {
+        display: inline-block;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--ink);
+        font-weight: 700;
+        background: var(--yellow);
+        padding: 0.35rem 0.7rem;
+        border: 2px solid var(--ink);
+        margin-bottom: 1rem;
+        transform: rotate(-1.5deg);
+        display: inline-block;
     }
     .hero h1 {
-        font-family: 'Inter Tight', sans-serif !important;
-        font-size: 3.6rem !important;
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-size: 3.5rem !important;
         line-height: 0.95 !important;
         letter-spacing: -0.045em !important;
-        font-weight: 900 !important;
-        text-transform: uppercase;
+        font-weight: 700 !important;
         margin: 0 0 1rem 0 !important;
         color: var(--ink) !important;
+        text-transform: uppercase;
     }
-    .hero h1 .stroke {
-        -webkit-text-stroke: 2px var(--ink);
-        color: transparent !important;
+    .hero h1 .blue {
+        color: var(--blue) !important;
+        font-weight: 700;
+    }
+    .hero h1 .red {
+        color: var(--red) !important;
+        font-weight: 700;
+    }
+    .hero h1 .underline {
+        background: linear-gradient(transparent 60%, var(--yellow) 60%);
+        padding: 0 0.15em;
     }
     .hero p {
         font-size: 1rem;
-        line-height: 1.55;
+        line-height: 1.6;
         color: var(--ink-2);
         margin: 0;
-        max-width: 520px;
+        max-width: 540px;
         font-weight: 400;
     }
-    .hero-pillars {
+
+    /* Tarjetas tipo "specs" a la derecha */
+    .hero-specs {
         display: flex;
         flex-direction: column;
-        gap: 0.55rem;
-        text-align: right;
-        padding-bottom: 0.35rem;
+        gap: 0.6rem;
+        min-width: 200px;
     }
-    .pillar {
+    .spec {
+        background: var(--surface);
+        border: 2px solid var(--ink);
+        padding: 0.6rem 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        transition: transform 0.15s ease;
+    }
+    .spec:nth-child(1) { transform: rotate(0.8deg); }
+    .spec:nth-child(2) { transform: rotate(-1.2deg); }
+    .spec:nth-child(3) { transform: rotate(0.6deg); }
+    .spec:hover { transform: rotate(0deg) scale(1.02); }
+    .spec-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 2px solid var(--ink);
+        flex-shrink: 0;
+    }
+    .spec:nth-child(1) .spec-dot { background: var(--red); }
+    .spec:nth-child(2) .spec-dot { background: var(--yellow); }
+    .spec:nth-child(3) .spec-dot { background: var(--blue); }
+    .spec-label {
         font-family: 'JetBrains Mono', monospace;
-        font-size: 0.68rem;
+        font-size: 0.66rem;
         letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: var(--ink-2);
-        font-weight: 500;
-        padding: 0.35rem 0.7rem;
-        background: var(--surface);
-        border: 1px solid var(--line);
+        font-weight: 600;
+        color: var(--ink);
     }
-    .pillar.live {
-        border-color: var(--red);
-        color: var(--red);
+    .spec-value {
+        font-family: 'Space Grotesk', sans-serif;
         font-weight: 700;
-    }
-    .pillar.live::before {
-        content: '● ';
-        color: var(--red);
-        animation: blink 1.6s ease-in-out infinite;
-    }
-    @keyframes blink {
-        0%, 100% { opacity: 1; }
-        50%      { opacity: 0.3; }
+        font-size: 0.78rem;
+        color: var(--ink);
+        margin-top: 1px;
+        letter-spacing: -0.01em;
     }
 
-    /* ═══ SECTION LABEL ═══ */
+    /* ═══ SECCIÓN LABEL ═══ */
     .sec-label {
         display: flex;
-        align-items: baseline;
-        gap: 0.9rem;
-        margin-bottom: 1.25rem;
-        padding-bottom: 0.65rem;
-        border-bottom: 1px solid var(--line-hard);
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.15rem;
     }
-    .sec-num {
-        font-family: 'Inter Tight', sans-serif;
-        font-weight: 900;
-        font-size: 1.6rem;
-        line-height: 1;
-        color: var(--ink);
-        letter-spacing: -0.04em;
+    .sec-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        background: var(--ink);
+        color: #ffffff;
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 700;
+        font-size: 0.85rem;
+        border-radius: 50%;
+        flex-shrink: 0;
     }
-    .sec-num .accent { color: var(--red); }
-    .sec-title {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.72rem;
-        letter-spacing: 0.2em;
+    .sec-label:nth-of-type(1) .sec-badge { background: var(--red); }
+    .sec-text {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 0.78rem;
+        letter-spacing: 0.16em;
         text-transform: uppercase;
+        font-weight: 700;
         color: var(--ink);
-        font-weight: 600;
+    }
+    .sec-line {
         flex: 1;
-    }
-    .sec-hint {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.68rem;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: var(--muted);
-        font-weight: 500;
+        height: 3px;
+        background: var(--ink);
     }
 
     /* ═══ CANVAS FRAME ═══ */
     .st-key-canvas_wrap {
         background: var(--surface);
-        border: 2px solid var(--ink);
-        padding: 1rem;
+        border: 3px solid var(--ink);
+        padding: 1.2rem;
         display: flex;
         justify-content: center;
         align-items: center;
         overflow: hidden;
         position: relative;
+        box-shadow: 10px 10px 0 var(--red);
+        transition: box-shadow 0.2s ease;
+    }
+    .st-key-canvas_wrap:hover {
+        box-shadow: 10px 10px 0 var(--blue);
     }
     .st-key-canvas_wrap::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(
-            90deg,
-            var(--red) 0 25%,
-            var(--ink) 25% 50%,
-            var(--ink) 50% 75%,
-            var(--ink) 75% 100%
-        );
+        top: -3px;
+        left: -3px;
+        width: 20px;
+        height: 20px;
+        background: var(--yellow);
+        border: 3px solid var(--ink);
+        border-right: none;
+        border-bottom: none;
+    }
+    .st-key-canvas_wrap::after {
+        content: '';
+        position: absolute;
+        bottom: -3px;
+        right: -3px;
+        width: 20px;
+        height: 20px;
+        background: var(--yellow);
+        border: 3px solid var(--ink);
+        border-left: none;
+        border-top: none;
     }
     .st-key-canvas_wrap [data-testid="stCanvas"] {
         margin: 0 auto;
@@ -325,109 +433,127 @@ st.markdown("""
         display: block;
     }
 
-    /* ═══ CORNER MARKS (sobre el canvas) ═══ */
-    .canvas-corner {
-        position: absolute;
-        width: 12px;
-        height: 12px;
-        border: 2px solid var(--red);
-        z-index: 10;
-    }
-    .canvas-corner.tl { top: 6px; left: 6px; border-right: none; border-bottom: none; }
-    .canvas-corner.tr { top: 6px; right: 6px; border-left: none; border-bottom: none; }
-    .canvas-corner.bl { bottom: 6px; left: 6px; border-right: none; border-top: none; }
-    .canvas-corner.br { bottom: 6px; right: 6px; border-left: none; border-top: none; }
-
     /* ═══ INPUT API KEY ═══ */
     .stTextInput label,
     .stTextInput [data-testid="stWidgetLabel"] p {
-        font-family: 'JetBrains Mono', monospace !important;
-        font-size: 0.68rem !important;
-        letter-spacing: 0.16em !important;
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-size: 0.74rem !important;
+        letter-spacing: 0.1em !important;
         text-transform: uppercase !important;
-        font-weight: 600 !important;
+        font-weight: 700 !important;
         color: var(--ink) !important;
     }
     .stTextInput div[data-baseweb="input"] > div,
     .stTextInput input {
         background: var(--surface) !important;
-        border: 1px solid var(--line-hard) !important;
+        border: 3px solid var(--ink) !important;
         border-radius: 0 !important;
         color: var(--ink) !important;
         font-family: 'JetBrains Mono', monospace !important;
         font-size: 0.88rem !important;
         padding: 0.7rem 0.9rem !important;
-        transition: border-color 0.1s ease, background 0.1s ease !important;
+        transition: all 0.15s ease !important;
     }
     .stTextInput div[data-baseweb="input"] > div:focus-within,
     .stTextInput input:focus {
-        border-color: var(--red) !important;
-        box-shadow: inset 4px 0 0 var(--red) !important;
+        border-color: var(--blue) !important;
+        box-shadow: 6px 6px 0 var(--yellow) !important;
         outline: none !important;
-        background: var(--surface) !important;
     }
 
-    /* ═══ BOTÓN PRINCIPAL ═══ */
+    /* ═══ BOTÓN ═══ */
     .stButton > button {
         width: 100%;
-        background: var(--ink) !important;
+        background: var(--red) !important;
         color: #ffffff !important;
-        border: 2px solid var(--ink) !important;
+        border: 3px solid var(--ink) !important;
         border-radius: 0 !important;
-        font-family: 'Inter Tight', sans-serif !important;
-        font-weight: 800 !important;
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-weight: 700 !important;
         font-size: 0.88rem !important;
-        letter-spacing: 0.18em !important;
+        letter-spacing: 0.16em !important;
         text-transform: uppercase !important;
-        padding: 0.95rem 1.4rem !important;
-        transition: all 0.12s ease !important;
+        padding: 0.9rem 1.4rem !important;
+        box-shadow: 7px 7px 0 var(--ink) !important;
+        transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
     .stButton > button p {
         color: #ffffff !important;
-        font-family: 'Inter Tight', sans-serif !important;
-        font-weight: 800 !important;
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-weight: 700 !important;
         font-size: 0.88rem !important;
-        letter-spacing: 0.18em !important;
+        letter-spacing: 0.16em !important;
         text-transform: uppercase !important;
     }
     .stButton > button:hover {
-        background: var(--red) !important;
-        border-color: var(--red) !important;
-        color: #ffffff !important;
+        background: var(--yellow) !important;
+        color: var(--ink) !important;
+        transform: translate(-2px, -2px);
+        box-shadow: 9px 9px 0 var(--ink) !important;
     }
-    .stButton > button:hover p { color: #ffffff !important; }
+    .stButton > button:hover p { color: var(--ink) !important; }
+    .stButton > button:active {
+        transform: translate(3px, 3px);
+        box-shadow: 4px 4px 0 var(--ink) !important;
+    }
 
-    /* ═══ RESULT CARD ═══ */
+    /* ═══ RESULT FRAME ═══ */
     .result-frame {
         background: var(--surface);
-        border: 2px solid var(--ink);
-        padding: 1.75rem 1.9rem;
+        border: 3px solid var(--ink);
+        padding: 1.6rem 1.75rem;
+        margin-top: 1rem;
         position: relative;
+        box-shadow: 10px 10px 0 var(--yellow);
     }
     .result-frame::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: var(--red);
+        top: -3px;
+        left: -3px;
+        right: -3px;
+        height: 12px;
+        background: repeating-linear-gradient(
+            90deg,
+            var(--red) 0 15px,
+            var(--ink) 15px 30px,
+            var(--yellow) 30px 45px,
+            var(--ink) 45px 60px,
+            var(--blue) 60px 75px,
+            var(--ink) 75px 90px
+        );
     }
     .result-head {
         display: flex;
-        align-items: baseline;
+        align-items: center;
         justify-content: space-between;
-        padding-bottom: 0.85rem;
-        margin-bottom: 1.25rem;
-        border-bottom: 1px solid var(--line);
+        padding: 0.75rem 0 0.9rem 0;
+        margin-bottom: 1.1rem;
+        border-bottom: 2px solid var(--ink);
     }
     .result-head .title {
-        font-family: 'Inter Tight', sans-serif;
-        font-weight: 800;
-        font-size: 0.95rem;
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
         letter-spacing: 0.14em;
         text-transform: uppercase;
         color: var(--ink);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+    .result-head .title::before {
+        content: '';
+        width: 14px;
+        height: 14px;
+        background: var(--red);
+        border: 2px solid var(--ink);
+        border-radius: 50%;
+        animation: pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50%      { transform: scale(0.7); opacity: 0.6; }
     }
     .result-head .meta {
         font-family: 'JetBrains Mono', monospace;
@@ -435,22 +561,12 @@ st.markdown("""
         letter-spacing: 0.16em;
         text-transform: uppercase;
         color: var(--muted);
+        background: var(--bg);
+        padding: 0.3rem 0.65rem;
+        border: 2px solid var(--ink);
     }
 
-    /* LaTeX */
-    .katex-display {
-        background: #f5f5f5 !important;
-        border-left: 4px solid var(--ink) !important;
-        padding: 1rem 1.25rem !important;
-        margin: 0.85rem 0 !important;
-        overflow-x: auto !important;
-    }
-    .katex {
-        font-size: 1.15em !important;
-        color: var(--ink) !important;
-    }
-
-    /* Markdown dentro del resultado */
+    /* Markdown del resultado */
     .result-frame .stMarkdown p,
     .result-frame .stMarkdown li {
         font-size: 1rem !important;
@@ -458,84 +574,110 @@ st.markdown("""
         color: var(--ink) !important;
     }
 
+    /* LaTeX */
+    .katex-display {
+        background: #f7f2e5 !important;
+        border: 2px solid var(--ink) !important;
+        border-left: 8px solid var(--blue) !important;
+        padding: 1rem 1.25rem !important;
+        margin: 0.9rem 0 !important;
+        overflow-x: auto !important;
+        border-radius: 0 !important;
+    }
+    .katex { font-size: 1.15em !important; color: var(--ink) !important; }
+
     /* ═══ EMPTY STATE ═══ */
     .empty-frame {
         background: var(--surface);
-        border: 1px solid var(--line);
-        border-left: 4px solid var(--ink);
-        padding: 2rem 1.85rem;
+        border: 3px dashed var(--ink);
+        padding: 2.25rem 1.75rem;
+        position: relative;
+        text-align: center;
     }
-    .empty-frame .tag {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.66rem;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: var(--muted);
-        margin-bottom: 0.9rem;
-        display: block;
+    .empty-frame .shape {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        background: var(--yellow);
+        border: 3px solid var(--ink);
+        border-radius: 50%;
+        font-size: 1.6rem;
+        margin-bottom: 1rem;
     }
     .empty-frame .title {
-        font-family: 'Inter Tight', sans-serif;
-        font-weight: 800;
-        font-size: 1.4rem;
-        letter-spacing: -0.03em;
-        color: var(--ink);
-        line-height: 1.15;
-        margin: 0 0 0.65rem 0;
-        text-transform: uppercase;
-    }
-    .empty-frame .title .accent { color: var(--red); }
-    .empty-frame .text {
-        font-size: 0.92rem;
-        line-height: 1.6;
-        color: var(--ink-2);
-        margin: 0;
-        max-width: 360px;
-    }
-
-    /* ═══ BOTTOM STRIP (info) ═══ */
-    .bottom-strip {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0;
-        border-top: 2px solid var(--ink);
-        margin-top: 3rem;
-    }
-    .strip-item {
-        padding: 1.25rem 1.25rem 1.25rem 0;
-        border-right: 1px solid var(--line);
-    }
-    .strip-item:last-child {
-        border-right: none;
-        padding-right: 0;
-        padding-left: 1.25rem;
-    }
-    .strip-item:not(:first-child) {
-        padding-left: 1.25rem;
-    }
-    .strip-item .idx {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.64rem;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: var(--red);
+        font-family: 'Space Grotesk', sans-serif;
         font-weight: 700;
-        display: block;
-        margin-bottom: 0.55rem;
-    }
-    .strip-item .head {
-        font-family: 'Inter Tight', sans-serif;
-        font-weight: 800;
-        font-size: 1rem;
+        font-size: 1.25rem;
         letter-spacing: -0.02em;
         text-transform: uppercase;
         color: var(--ink);
-        margin: 0 0 0.35rem 0;
         line-height: 1.15;
+        margin: 0 0 0.6rem 0;
     }
-    .strip-item .body {
+    .empty-frame .title .accent { color: var(--blue); }
+    .empty-frame .text {
+        font-size: 0.9rem;
+        line-height: 1.55;
+        color: var(--muted);
+        margin: 0 auto;
+        max-width: 340px;
+    }
+
+    /* ═══ TIPS AL PIE ═══ */
+    .tips {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+        margin-top: 3rem;
+    }
+    .tip {
+        background: var(--surface);
+        border: 3px solid var(--ink);
+        padding: 1.25rem 1.35rem;
+        position: relative;
+        transition: all 0.2s ease;
+    }
+    .tip:nth-child(1) { box-shadow: 6px 6px 0 var(--red); }
+    .tip:nth-child(2) { box-shadow: 6px 6px 0 var(--yellow); }
+    .tip:nth-child(3) { box-shadow: 6px 6px 0 var(--blue); }
+    .tip:hover {
+        transform: translate(-3px, -3px);
+    }
+    .tip:nth-child(1):hover { box-shadow: 9px 9px 0 var(--red); }
+    .tip:nth-child(2):hover { box-shadow: 9px 9px 0 var(--yellow); }
+    .tip:nth-child(3):hover { box-shadow: 9px 9px 0 var(--blue); }
+
+    .tip-num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        background: var(--ink);
+        color: #ffffff;
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 700;
+        font-size: 0.8rem;
+        border-radius: 50%;
+        margin-bottom: 0.7rem;
+    }
+    .tip:nth-child(1) .tip-num { background: var(--red); }
+    .tip:nth-child(2) .tip-num { background: var(--yellow); color: var(--ink); }
+    .tip:nth-child(3) .tip-num { background: var(--blue); }
+    .tip-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+        margin: 0 0 0.4rem 0;
+        color: var(--ink);
+    }
+    .tip-text {
         font-size: 0.85rem;
-        line-height: 1.5;
+        line-height: 1.55;
         color: var(--muted);
         margin: 0;
     }
@@ -546,31 +688,33 @@ st.markdown("""
     /* ═══ ALERTAS ═══ */
     [data-testid="stAlert"] {
         border-radius: 0 !important;
-        border: 1px solid var(--ink) !important;
-        border-left: 4px solid var(--red) !important;
+        border: 3px solid var(--ink) !important;
+        border-left: 8px solid var(--red) !important;
         background: var(--surface) !important;
     }
 
     /* ═══ SCROLLBAR ═══ */
-    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar { width: 12px; height: 12px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb {
         background: var(--ink);
-        border-radius: 0;
+        border: 3px solid var(--bg);
     }
     ::-webkit-scrollbar-thumb:hover { background: var(--red); }
 
     /* ═══ RESPONSIVE ═══ */
     @media (max-width: 900px) {
-        .hero-grid { grid-template-columns: 1fr; gap: 1.25rem; }
-        .hero-pillars { text-align: left; }
-        .hero h1 { font-size: 2.4rem !important; }
-        .hero-num { font-size: 3.5rem; }
-        .topbar { grid-template-columns: auto 1fr; }
-        .topbar-meta { grid-column: 1 / -1; text-align: left; margin-top: 0.5rem; }
-        .bottom-strip { grid-template-columns: 1fr; }
-        .strip-item { border-right: none !important; border-bottom: 1px solid var(--line); padding: 1.1rem 0 !important; }
-        .strip-item:last-child { border-bottom: none; }
+        .hero { grid-template-columns: 60px 1fr; gap: 1rem; }
+        .hero-shape { width: 60px; height: 90px; }
+        .hero-shape .circle { width: 42px; height: 42px; }
+        .hero-shape .square { width: 38px; height: 38px; top: 30px; left: 20px; }
+        .hero-shape .triangle { border-left-width: 20px; border-right-width: 20px; border-bottom-width: 32px; }
+        .hero-specs { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; min-width: 0; }
+        .spec { flex: 1 1 140px; }
+        .hero h1 { font-size: 2.3rem !important; }
+        .tips { grid-template-columns: 1fr; }
+        .banner::before { width: 50px; }
+        .banner-meta { display: none; }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -593,37 +737,35 @@ def encode_image_to_base64(image_path):
 with st.sidebar:
     st.markdown("""
         <div class="sb-head">
-            <span class="eyebrow">§ Panel</span>
-            <div class="title">Herramientas</div>
+            <span class="eyebrow">◆ Control</span>
+            <div class="title">Ajustes de trazo</div>
         </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("**Grosor del trazo**")
+    st.markdown("**Grosor**")
     stroke_width = st.slider(
-        "Grosor del trazo",
+        "Grosor",
         1, 30, 5,
         label_visibility='collapsed',
     )
 
     st.markdown("---")
     st.caption(
-        "**Nota** · Dibuja con trazos claros y separados para "
-        "mejorar la precisión del análisis."
+        "**Consejo** · Dibuja con trazos claros y separados. "
+        "Evita encimar líneas para mejor precisión."
     )
 
 
 # ═══════════════════════════════════════════════════════════════
-# TOP BAR
+# BANNER SUPERIOR
 # ═══════════════════════════════════════════════════════════════
 st.markdown("""
-    <div class="topbar">
-        <div class="topbar-mark">T</div>
-        <div class="topbar-title">Tablero Inteligente</div>
-        <div class="topbar-meta">
-            IA <span class="sep">/</span>
-            Visión <span class="sep">/</span>
-            Bocetos
+    <div class="banner">
+        <div class="banner-left">
+            <div class="banner-mark">◆</div>
+            <div class="banner-title">Tablero Inteligente</div>
         </div>
+        <div class="banner-meta">MODELO <b>GPT-4o MINI</b> · SALIDA ES</div>
     </div>
 """, unsafe_allow_html=True)
 
@@ -632,17 +774,42 @@ st.markdown("""
 # HERO
 # ═══════════════════════════════════════════════════════════════
 st.markdown("""
-    <div class="hero-grid">
-        <div class="hero-num">01<span class="dot">.</span></div>
-        <div class="hero-body">
-            <span class="hero-eyebrow">Reconocimiento de bocetos</span>
-            <h1>Dibuja.<br><span class="stroke">La máquina</span><br>interpreta.</h1>
-            <p>Un lienzo simple que interpreta lo que dibujas. Resuelve operaciones, reconoce figuras y describe lo que ve — todo desde tu propio trazo.</p>
+    <div class="hero">
+        <div class="hero-shape">
+            <div class="circle"></div>
+            <div class="square"></div>
+            <div class="triangle"></div>
         </div>
-        <div class="hero-pillars">
-            <span class="pillar live">Modelo activo</span>
-            <span class="pillar">GPT-4o mini</span>
-            <span class="pillar">Salida en ES</span>
+        <div class="hero-body">
+            <span class="hero-eyebrow">Reconocimiento · Visión · IA</span>
+            <h1>
+                Dibuja <span class="blue">algo</span>.<br>
+                La máquina lo <span class="red">interpreta</span>.
+            </h1>
+            <p>Un lienzo simple que <span class="underline">traduce tus trazos en significado</span>. Resuelve operaciones matemáticas paso a paso, identifica figuras geométricas y describe lo que dibujas en español.</p>
+        </div>
+        <div class="hero-specs">
+            <div class="spec">
+                <span class="spec-dot"></span>
+                <div>
+                    <div class="spec-label">Modelo</div>
+                    <div class="spec-value">GPT-4o mini</div>
+                </div>
+            </div>
+            <div class="spec">
+                <span class="spec-dot"></span>
+                <div>
+                    <div class="spec-label">Modo</div>
+                    <div class="spec-value">Visión + texto</div>
+                </div>
+            </div>
+            <div class="spec">
+                <span class="spec-dot"></span>
+                <div>
+                    <div class="spec-label">Salida</div>
+                    <div class="spec-value">Español · LaTeX</div>
+                </div>
+            </div>
         </div>
     </div>
 """, unsafe_allow_html=True)
@@ -657,21 +824,13 @@ col_left, col_right = st.columns([1.1, 1], gap="large")
 with col_left:
     st.markdown("""
         <div class="sec-label">
-            <span class="sec-num">1<span class="accent">.</span></span>
-            <span class="sec-title">Lienzo</span>
-            <span class="sec-hint">400 × 300</span>
+            <span class="sec-badge">1</span>
+            <span class="sec-text">Lienzo</span>
+            <span class="sec-line"></span>
         </div>
     """, unsafe_allow_html=True)
 
     with st.container(key="canvas_wrap"):
-        # Marcas de esquina
-        st.markdown("""
-            <div class="canvas-corner tl"></div>
-            <div class="canvas-corner tr"></div>
-            <div class="canvas-corner bl"></div>
-            <div class="canvas-corner br"></div>
-        """, unsafe_allow_html=True)
-
         canvas_result = st_canvas(
             fill_color="rgba(255, 165, 0, 0.3)",
             stroke_width=stroke_width,
@@ -687,9 +846,9 @@ with col_left:
 with col_right:
     st.markdown("""
         <div class="sec-label">
-            <span class="sec-num">2<span class="accent">.</span></span>
-            <span class="sec-title">Análisis</span>
-            <span class="sec-hint">API Key</span>
+            <span class="sec-badge">2</span>
+            <span class="sec-text">Análisis</span>
+            <span class="sec-line"></span>
         </div>
     """, unsafe_allow_html=True)
 
@@ -704,9 +863,9 @@ with col_right:
     if api_key:
         client = OpenAI(api_key=api_key)
 
-    st.markdown("<div style='height: 0.75rem'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height: 0.85rem'></div>", unsafe_allow_html=True)
 
-    analyze_button = st.button("Analizar boceto →", type="secondary")
+    analyze_button = st.button("▶ Analizar boceto", type="secondary")
 
     st.markdown("<div style='height: 1.5rem'></div>", unsafe_allow_html=True)
 
@@ -810,32 +969,32 @@ elif not analyze_button:
     with result_slot:
         st.markdown("""
             <div class="empty-frame">
-                <span class="tag">— Esperando</span>
-                <p class="title">Sin boceto<br>por <span class="accent">analizar</span></p>
-                <p class="text">Dibuja en el lienzo, ingresa tu clave y presiona el botón para ver aquí el resultado.</p>
+                <div class="shape">◆</div>
+                <p class="title">Sin boceto<br><span class="accent">por analizar</span></p>
+                <p class="text">Dibuja en el lienzo, ingresa tu clave y presiona el botón. El resultado aparecerá aquí.</p>
             </div>
         """, unsafe_allow_html=True)
 
 
 # ═══════════════════════════════════════════════════════════════
-# BOTTOM STRIP
+# TIPS AL PIE
 # ═══════════════════════════════════════════════════════════════
 st.markdown("""
-    <div class="bottom-strip">
-        <div class="strip-item">
-            <span class="idx">01 — Trazo</span>
-            <p class="head">Líneas limpias</p>
-            <p class="body">Dibuja con trazos definidos y bien separados. Evita encimar líneas que puedan confundir al modelo.</p>
+    <div class="tips">
+        <div class="tip">
+            <span class="tip-num">1</span>
+            <h4 class="tip-title">Traza limpio</h4>
+            <p class="tip-text">Líneas definidas y bien separadas. Evita encimar trazos que confundan al modelo.</p>
         </div>
-        <div class="strip-item">
-            <span class="idx">02 — Matemáticas</span>
-            <p class="head">Operaciones y figuras</p>
-            <p class="body">Escribe una operación como 2+2, una ecuación como x²=9, o dibuja triángulos, círculos y rectángulos.</p>
+        <div class="tip">
+            <span class="tip-num">2</span>
+            <h4 class="tip-title">Prueba matemáticas</h4>
+            <p class="tip-text">Escribe 2+2, una ecuación como x²=9, o dibuja un triángulo, círculo o rectángulo.</p>
         </div>
-        <div class="strip-item">
-            <span class="idx">03 — Libre</span>
-            <p class="head">Cualquier cosa</p>
-            <p class="body">Si dibujas algo distinto, la IA describirá qué ve: formas, objetos, símbolos y su posible significado.</p>
+        <div class="tip">
+            <span class="tip-num">3</span>
+            <h4 class="tip-title">Dibujo libre</h4>
+            <p class="tip-text">Si dibujas algo diferente, la IA describirá qué ve: formas, objetos y su posible significado.</p>
         </div>
     </div>
 """, unsafe_allow_html=True)
