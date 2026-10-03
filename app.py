@@ -83,7 +83,11 @@ if canvas_result.image_data is not None and api_key and analyze_button:
  
         base64_image = encode_image_to_base64("img.png")
             
-        prompt_text = (f"You are a math tutor analyzing a hand-drawn sketch. Step 1 — Identify: Determine whether the sketch contains a math problem, equation, formula, or geometric figure. Step 2 — If it does:
+        prompt_text = """You are a math tutor analyzing a hand-drawn sketch.
+
+Step 1 — Identify: Determine whether the sketch contains a math problem, equation, formula, or geometric figure.
+
+Step 2 — If it does:
 - Transcribe the problem exactly as drawn.
 - Solve it step by step, showing each operation clearly.
 - State the final answer at the end.
@@ -92,7 +96,7 @@ Step 3 — If it does not contain math:
 - Describe what the sketch represents.
 - Mention key shapes, symbols, or elements you recognize.
 
-Be precise and concise. Use clear math notation.")
+Be precise and concise. Use clear math notation."""
     
       # Create the payload for the completion request
         messages = [
