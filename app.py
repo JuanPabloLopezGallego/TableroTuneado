@@ -12,53 +12,47 @@ from streamlit_drawable_canvas import st_canvas
 # ═══════════════════════════════════════════════════════════════
 st.set_page_config(
     page_title='Tablero Inteligente',
-    page_icon='🧠',
+    page_icon='◼',
     layout='wide',
     initial_sidebar_state='collapsed',
 )
 
 # ═══════════════════════════════════════════════════════════════
-# ESTILOS — CREATIVE STUDIO
+# ESTILOS — SWISS / INTERNATIONAL TYPOGRAPHIC
 # ═══════════════════════════════════════════════════════════════
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
     :root {
-        --bg: #f5f0e6;
-        --paper: #ffffff;
-        --ink: #14120e;
-        --muted: #7a7468;
-        --border: #e6dfd0;
-        --accent: #ff5a36;
-        --accent-soft: #fff0eb;
-        --shadow: rgba(20, 18, 14, 0.10);
+        --bg:        #fafafa;
+        --surface:   #ffffff;
+        --ink:       #0a0a0a;
+        --ink-2:     #2a2a2a;
+        --muted:     #757575;
+        --line:      #d4d4d4;
+        --line-hard: #0a0a0a;
+        --red:       #e63329;
+        --red-soft:  #fde8e6;
     }
 
-    html, body, [class*="css"], .stApp {
-        font-family: 'Inter', sans-serif !important;
-        color: var(--ink);
+    /* ═══ BASE ═══ */
+    html, body, [class*="css"], .stApp, button, input, textarea, select {
+        font-family: 'Inter Tight', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+        color: var(--ink) !important;
+        font-feature-settings: 'ss01', 'cv01';
     }
-
     h1, h2, h3, h4, h5 {
-        font-family: 'Instrument Serif', serif !important;
-        font-weight: 600 !important;
-        letter-spacing: -0.015em !important;
+        font-family: 'Inter Tight', sans-serif !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.035em !important;
         color: var(--ink) !important;
     }
 
-    /* ═══ FONDO ═══ */
     .stApp {
         background-color: var(--bg) !important;
         background-image:
-            radial-gradient(circle at 10% -5%, rgba(255, 90, 54, 0.10), transparent 42%),
-            radial-gradient(circle at 90% 105%, rgba(255, 209, 102, 0.14), transparent 45%),
-            repeating-linear-gradient(
-                45deg,
-                transparent 0 22px,
-                rgba(20, 18, 14, 0.012) 22px 24px
-            );
-        background-attachment: fixed;
+            linear-gradient(90deg, transparent 0 calc(50% - 0.5px), rgba(10, 10, 10, 0.025) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px));
     }
 
     #MainMenu { visibility: hidden; }
@@ -66,251 +60,311 @@ st.markdown("""
     header[data-testid="stHeader"] { background: transparent; }
 
     .block-container {
-        padding-top: 2.5rem !important;
+        padding-top: 2rem !important;
         padding-bottom: 3rem !important;
-        max-width: 1180px !important;
+        max-width: 1240px !important;
     }
 
     /* ═══ SIDEBAR ═══ */
     [data-testid="stSidebar"] {
-        background: #ffffff !important;
-        border-right: 1px solid var(--border) !important;
+        background: var(--surface) !important;
+        border-right: 1px solid var(--line-hard) !important;
     }
     [data-testid="stSidebar"] * { color: var(--ink) !important; }
 
-    .sb-brand {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding-bottom: 1.1rem;
+    .sb-head {
+        padding-bottom: 1rem;
         margin-bottom: 1.25rem;
-        border-bottom: 1px solid var(--border);
+        border-bottom: 2px solid var(--ink);
     }
-    .sb-brand-mark {
-        width: 42px;
-        height: 42px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, #ff5a36, #ff8e53);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.3rem;
-        box-shadow: 0 6px 16px rgba(255, 90, 54, 0.32);
-        flex-shrink: 0;
-    }
-    .sb-brand-text .name {
-        font-family: 'Instrument Serif', serif;
-        font-weight: 700;
-        font-size: 1.1rem;
-        line-height: 1;
-        color: var(--ink);
-        letter-spacing: -0.01em;
-    }
-    .sb-brand-text .tag {
+    .sb-head .eyebrow {
         font-family: 'JetBrains Mono', monospace;
         font-size: 0.62rem;
-        letter-spacing: 0.16em;
+        letter-spacing: 0.24em;
         text-transform: uppercase;
-        color: var(--muted);
-        margin-top: 4px;
+        color: var(--red);
+        font-weight: 700;
+        display: block;
+        margin-bottom: 0.35rem;
+    }
+    .sb-head .title {
+        font-family: 'Inter Tight', sans-serif;
+        font-weight: 800;
+        font-size: 1.15rem;
+        letter-spacing: -0.03em;
+        line-height: 1;
+        color: var(--ink);
     }
 
     [data-testid="stSidebar"] label,
     [data-testid="stSidebar"] [data-testid="stWidgetLabel"] p {
-        font-size: 0.83rem !important;
+        font-family: 'JetBrains Mono', monospace !important;
+        font-size: 0.68rem !important;
+        letter-spacing: 0.14em !important;
+        text-transform: uppercase !important;
         font-weight: 600 !important;
-        color: #4c4740 !important;
+        color: var(--ink-2) !important;
     }
 
-    /* Slider del sidebar */
     [data-testid="stSidebar"] [data-baseweb="slider"] div[role="slider"] {
-        background-color: var(--accent) !important;
-        border-color: var(--accent) !important;
-        box-shadow: 0 0 0 4px rgba(255, 90, 54, 0.16) !important;
+        background-color: var(--ink) !important;
+        border-color: var(--ink) !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        width: 14px !important;
+        height: 14px !important;
     }
     [data-testid="stSidebar"] [data-baseweb="slider"] > div > div > div {
-        background: linear-gradient(90deg, var(--accent), #ff8e53) !important;
+        background: var(--ink) !important;
+        border-radius: 0 !important;
+    }
+
+    /* ═══ TOP BAR ═══ */
+    .topbar {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 1.25rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--ink);
+        margin-bottom: 2.5rem;
+    }
+    .topbar-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        background: var(--ink);
+        color: #ffffff;
+        font-family: 'Inter Tight', sans-serif;
+        font-weight: 900;
+        font-size: 0.95rem;
+        letter-spacing: -0.02em;
+    }
+    .topbar-title {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--ink);
+        font-weight: 600;
+    }
+    .topbar-meta {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.68rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 500;
+        text-align: right;
+    }
+    .topbar-meta .sep {
+        color: var(--red);
+        margin: 0 0.4rem;
+        font-weight: 700;
     }
 
     /* ═══ HERO ═══ */
-    .hero {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
+    .hero-grid {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
         gap: 2rem;
-        padding-bottom: 1.5rem;
-        margin-bottom: 2rem;
-        border-bottom: 1px solid var(--border);
+        align-items: end;
+        padding-bottom: 2rem;
+        margin-bottom: 2.5rem;
+        border-bottom: 1px solid var(--line);
     }
-    .hero-left { flex: 1; }
-    .hero-kicker {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.6rem;
+    .hero-num {
+        font-family: 'Inter Tight', sans-serif;
+        font-weight: 900;
+        font-size: 5.5rem;
+        line-height: 0.85;
+        letter-spacing: -0.05em;
+        color: var(--ink);
+        font-feature-settings: 'tnum';
+    }
+    .hero-num .dot {
+        color: var(--red);
+    }
+    .hero-body { padding-bottom: 0.35rem; }
+    .hero-eyebrow {
         font-family: 'JetBrains Mono', monospace;
-        font-size: 0.7rem;
-        letter-spacing: 0.2em;
+        font-size: 0.68rem;
+        letter-spacing: 0.22em;
         text-transform: uppercase;
-        color: var(--accent);
-        font-weight: 600;
-        margin-bottom: 0.85rem;
-    }
-    .hero-kicker::before {
-        content: '';
-        display: inline-block;
-        width: 22px;
-        height: 2px;
-        background: var(--accent);
+        color: var(--red);
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        display: block;
     }
     .hero h1 {
-        font-family: 'Instrument Serif', serif !important;
-        font-size: 3.2rem !important;
-        line-height: 1 !important;
-        letter-spacing: -0.025em !important;
-        font-weight: 600 !important;
-        margin: 0 0 0.65rem 0 !important;
+        font-family: 'Inter Tight', sans-serif !important;
+        font-size: 3.6rem !important;
+        line-height: 0.95 !important;
+        letter-spacing: -0.045em !important;
+        font-weight: 900 !important;
+        text-transform: uppercase;
+        margin: 0 0 1rem 0 !important;
         color: var(--ink) !important;
     }
-    .hero h1 em {
-        font-style: italic;
-        color: var(--accent);
-        font-weight: 400;
+    .hero h1 .stroke {
+        -webkit-text-stroke: 2px var(--ink);
+        color: transparent !important;
     }
     .hero p {
-        color: var(--muted);
-        font-size: 1.02rem;
+        font-size: 1rem;
         line-height: 1.55;
+        color: var(--ink-2);
         margin: 0;
-        max-width: 560px;
+        max-width: 520px;
+        font-weight: 400;
     }
-    .hero-chips {
+    .hero-pillars {
         display: flex;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-        justify-content: flex-end;
+        flex-direction: column;
+        gap: 0.55rem;
+        text-align: right;
+        padding-bottom: 0.35rem;
     }
-    .hero-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        background: #ffffff;
-        border: 1px solid var(--border);
-        border-radius: 100px;
-        padding: 0.45rem 0.85rem;
-        font-size: 0.78rem;
+    .pillar {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.68rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ink-2);
         font-weight: 500;
-        color: var(--ink);
-        white-space: nowrap;
+        padding: 0.35rem 0.7rem;
+        background: var(--surface);
+        border: 1px solid var(--line);
     }
-    .hero-chip .dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: var(--accent);
+    .pillar.live {
+        border-color: var(--red);
+        color: var(--red);
+        font-weight: 700;
+    }
+    .pillar.live::before {
+        content: '● ';
+        color: var(--red);
+        animation: blink 1.6s ease-in-out infinite;
+    }
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50%      { opacity: 0.3; }
     }
 
-    /* ═══ STEP LABEL (arriba de cada bloque) ═══ */
-    .step-label {
+    /* ═══ SECTION LABEL ═══ */
+    .sec-label {
         display: flex;
-        align-items: center;
-        gap: 0.7rem;
+        align-items: baseline;
+        gap: 0.9rem;
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.65rem;
+        border-bottom: 1px solid var(--line-hard);
+    }
+    .sec-num {
+        font-family: 'Inter Tight', sans-serif;
+        font-weight: 900;
+        font-size: 1.6rem;
+        line-height: 1;
+        color: var(--ink);
+        letter-spacing: -0.04em;
+    }
+    .sec-num .accent { color: var(--red); }
+    .sec-title {
         font-family: 'JetBrains Mono', monospace;
-        font-size: 0.7rem;
-        letter-spacing: 0.18em;
+        font-size: 0.72rem;
+        letter-spacing: 0.2em;
         text-transform: uppercase;
         color: var(--ink);
         font-weight: 600;
-        margin-bottom: 1rem;
-    }
-    .step-label .num {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 24px;
-        height: 24px;
-        border-radius: 8px;
-        background: var(--ink);
-        color: #ffffff !important;
-        font-size: 0.68rem;
-        font-weight: 700;
-        flex-shrink: 0;
-    }
-    .step-label .line {
         flex: 1;
-        height: 1px;
-        background: var(--border);
+    }
+    .sec-hint {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.68rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 500;
     }
 
-    /* ═══ MARCO DEL CANVAS (polaroid) ═══ */
+    /* ═══ CANVAS FRAME ═══ */
     .st-key-canvas_wrap {
-        background: #ffffff;
+        background: var(--surface);
         border: 2px solid var(--ink);
-        border-radius: 20px;
-        padding: 1.25rem;
-        box-shadow: 12px 12px 0 var(--accent);
+        padding: 1rem;
         display: flex;
         justify-content: center;
         align-items: center;
         overflow: hidden;
-        transition: box-shadow 0.3s ease, transform 0.3s ease;
+        position: relative;
     }
-    .st-key-canvas_wrap:hover {
-        box-shadow: 16px 16px 0 var(--accent);
-        transform: translateY(-3px);
+    .st-key-canvas_wrap::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(
+            90deg,
+            var(--red) 0 25%,
+            var(--ink) 25% 50%,
+            var(--ink) 50% 75%,
+            var(--ink) 75% 100%
+        );
     }
     .st-key-canvas_wrap [data-testid="stCanvas"] {
         margin: 0 auto;
-        border-radius: 10px;
+        border-radius: 0;
         overflow: hidden;
     }
     .st-key-canvas_wrap canvas {
-        border-radius: 10px !important;
+        border-radius: 0 !important;
         display: block;
     }
 
-    /* Etiqueta arriba del canvas */
-    .canvas-label {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.68rem;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        color: var(--muted);
-        padding: 0 0.35rem 0.7rem 0.35rem;
+    /* ═══ CORNER MARKS (sobre el canvas) ═══ */
+    .canvas-corner {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border: 2px solid var(--red);
+        z-index: 10;
     }
-    .canvas-label .hint {
-        color: var(--accent);
-        font-weight: 600;
-    }
+    .canvas-corner.tl { top: 6px; left: 6px; border-right: none; border-bottom: none; }
+    .canvas-corner.tr { top: 6px; right: 6px; border-left: none; border-bottom: none; }
+    .canvas-corner.bl { bottom: 6px; left: 6px; border-right: none; border-top: none; }
+    .canvas-corner.br { bottom: 6px; right: 6px; border-left: none; border-top: none; }
 
-    /* ═══ INPUT DE API KEY ═══ */
+    /* ═══ INPUT API KEY ═══ */
     .stTextInput label,
     .stTextInput [data-testid="stWidgetLabel"] p {
         font-family: 'JetBrains Mono', monospace !important;
-        font-size: 0.7rem !important;
+        font-size: 0.68rem !important;
         letter-spacing: 0.16em !important;
         text-transform: uppercase !important;
-        color: var(--ink) !important;
         font-weight: 600 !important;
+        color: var(--ink) !important;
     }
     .stTextInput div[data-baseweb="input"] > div,
     .stTextInput input {
-        background: #ffffff !important;
-        border: 2px solid var(--border) !important;
-        border-radius: 12px !important;
+        background: var(--surface) !important;
+        border: 1px solid var(--line-hard) !important;
+        border-radius: 0 !important;
         color: var(--ink) !important;
         font-family: 'JetBrains Mono', monospace !important;
-        font-size: 0.9rem !important;
-        padding: 0.75rem 1rem !important;
-        transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+        font-size: 0.88rem !important;
+        padding: 0.7rem 0.9rem !important;
+        transition: border-color 0.1s ease, background 0.1s ease !important;
     }
     .stTextInput div[data-baseweb="input"] > div:focus-within,
     .stTextInput input:focus {
-        border-color: var(--accent) !important;
-        box-shadow: 0 0 0 4px rgba(255, 90, 54, 0.14) !important;
+        border-color: var(--red) !important;
+        box-shadow: inset 4px 0 0 var(--red) !important;
         outline: none !important;
+        background: var(--surface) !important;
     }
 
     /* ═══ BOTÓN PRINCIPAL ═══ */
@@ -318,194 +372,205 @@ st.markdown("""
         width: 100%;
         background: var(--ink) !important;
         color: #ffffff !important;
-        border: none !important;
-        border-radius: 12px !important;
-        font-family: 'Inter', sans-serif !important;
-        font-weight: 700 !important;
-        font-size: 0.95rem !important;
-        letter-spacing: 0.02em !important;
-        padding: 0.85rem 1.4rem !important;
-        box-shadow: 6px 6px 0 var(--accent) !important;
-        transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        border: 2px solid var(--ink) !important;
+        border-radius: 0 !important;
+        font-family: 'Inter Tight', sans-serif !important;
+        font-weight: 800 !important;
+        font-size: 0.88rem !important;
+        letter-spacing: 0.18em !important;
+        text-transform: uppercase !important;
+        padding: 0.95rem 1.4rem !important;
+        transition: all 0.12s ease !important;
     }
     .stButton > button p {
         color: #ffffff !important;
-        font-weight: 700 !important;
-        font-size: 0.95rem !important;
+        font-family: 'Inter Tight', sans-serif !important;
+        font-weight: 800 !important;
+        font-size: 0.88rem !important;
+        letter-spacing: 0.18em !important;
+        text-transform: uppercase !important;
     }
     .stButton > button:hover {
-        background: var(--accent) !important;
-        transform: translate(-2px, -2px);
-        box-shadow: 8px 8px 0 var(--ink) !important;
+        background: var(--red) !important;
+        border-color: var(--red) !important;
+        color: #ffffff !important;
     }
-    .stButton > button:active {
-        transform: translate(2px, 2px);
-        box-shadow: 4px 4px 0 var(--accent) !important;
-    }
+    .stButton > button:hover p { color: #ffffff !important; }
 
-    /* ═══ TARJETA DE RESULTADO ═══ */
-    .result-card {
-        background: #ffffff;
+    /* ═══ RESULT CARD ═══ */
+    .result-frame {
+        background: var(--surface);
         border: 2px solid var(--ink);
-        border-radius: 20px;
         padding: 1.75rem 1.9rem;
-        box-shadow: 10px 10px 0 var(--accent);
-        margin-top: 1rem;
         position: relative;
     }
-    .result-card::before {
+    .result-frame::before {
         content: '';
         position: absolute;
-        top: -2px; left: -2px;
-        width: 0; height: 0;
-        border-top: 20px solid var(--accent);
-        border-right: 20px solid transparent;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--red);
     }
     .result-head {
         display: flex;
-        align-items: center;
-        gap: 0.7rem;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.7rem;
-        letter-spacing: 0.18em;
+        align-items: baseline;
+        justify-content: space-between;
+        padding-bottom: 0.85rem;
+        margin-bottom: 1.25rem;
+        border-bottom: 1px solid var(--line);
+    }
+    .result-head .title {
+        font-family: 'Inter Tight', sans-serif;
+        font-weight: 800;
+        font-size: 0.95rem;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: var(--accent);
-        font-weight: 700;
-        margin-bottom: 1.2rem;
+        color: var(--ink);
     }
-    .result-head .dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--accent);
-        box-shadow: 0 0 12px var(--accent);
-        animation: pulse-dot 1.8s ease-in-out infinite;
-    }
-    @keyframes pulse-dot {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50%      { opacity: 0.5; transform: scale(0.85); }
+    .result-head .meta {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.66rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted);
     }
 
-    /* ═══ AJUSTES AL MARKDOWN DE LA RESPUESTA ═══ */
-    .result-card .stMarkdown p,
-    .result-card .stMarkdown li {
-        font-size: 1rem !important;
-        line-height: 1.65 !important;
-        color: var(--ink) !important;
-    }
-    .result-card .stMarkdown h1,
-    .result-card .stMarkdown h2,
-    .result-card .stMarkdown h3 {
-        margin-top: 1.2rem !important;
-        margin-bottom: 0.6rem !important;
-    }
-    /* LaTeX display */
+    /* LaTeX */
     .katex-display {
-        background: #faf7f0 !important;
-        border-left: 4px solid var(--accent) !important;
-        border-radius: 10px !important;
+        background: #f5f5f5 !important;
+        border-left: 4px solid var(--ink) !important;
         padding: 1rem 1.25rem !important;
         margin: 0.85rem 0 !important;
         overflow-x: auto !important;
     }
-    .katex { font-size: 1.15em !important; color: var(--ink) !important; }
+    .katex {
+        font-size: 1.15em !important;
+        color: var(--ink) !important;
+    }
 
-    /* ═══ ESTADO VACÍO ═══ */
-    .empty-state {
-        background: #ffffff;
-        border: 2px dashed var(--border);
-        border-radius: 20px;
-        padding: 2.5rem 1.75rem;
-        text-align: center;
-        margin-top: 1rem;
+    /* Markdown dentro del resultado */
+    .result-frame .stMarkdown p,
+    .result-frame .stMarkdown li {
+        font-size: 1rem !important;
+        line-height: 1.65 !important;
+        color: var(--ink) !important;
     }
-    .empty-state .icon {
-        font-size: 3rem;
-        margin-bottom: 0.75rem;
-        display: block;
-        filter: grayscale(0.2);
+
+    /* ═══ EMPTY STATE ═══ */
+    .empty-frame {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-left: 4px solid var(--ink);
+        padding: 2rem 1.85rem;
     }
-    .empty-state .title {
-        font-family: 'Instrument Serif', serif;
-        font-size: 1.3rem;
-        font-weight: 600;
-        color: var(--ink);
-        margin: 0 0 0.35rem 0;
-    }
-    .empty-state .text {
-        font-size: 0.9rem;
+    .empty-frame .tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.66rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
         color: var(--muted);
-        line-height: 1.55;
-        margin: 0 auto;
-        max-width: 340px;
+        margin-bottom: 0.9rem;
+        display: block;
+    }
+    .empty-frame .title {
+        font-family: 'Inter Tight', sans-serif;
+        font-weight: 800;
+        font-size: 1.4rem;
+        letter-spacing: -0.03em;
+        color: var(--ink);
+        line-height: 1.15;
+        margin: 0 0 0.65rem 0;
+        text-transform: uppercase;
+    }
+    .empty-frame .title .accent { color: var(--red); }
+    .empty-frame .text {
+        font-size: 0.92rem;
+        line-height: 1.6;
+        color: var(--ink-2);
+        margin: 0;
+        max-width: 360px;
     }
 
-    /* ═══ TIPS AL PIE ═══ */
-    .tips {
+    /* ═══ BOTTOM STRIP (info) ═══ */
+    .bottom-strip {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
+        gap: 0;
+        border-top: 2px solid var(--ink);
         margin-top: 3rem;
     }
-    .tip {
-        background: #ffffff;
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 1.1rem 1.2rem;
-        transition: all 0.2s ease;
+    .strip-item {
+        padding: 1.25rem 1.25rem 1.25rem 0;
+        border-right: 1px solid var(--line);
     }
-    .tip:hover {
-        border-color: var(--accent);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 24px rgba(255, 90, 54, 0.10);
+    .strip-item:last-child {
+        border-right: none;
+        padding-right: 0;
+        padding-left: 1.25rem;
     }
-    .tip-icon {
-        font-size: 1.4rem;
-        margin-bottom: 0.55rem;
+    .strip-item:not(:first-child) {
+        padding-left: 1.25rem;
+    }
+    .strip-item .idx {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.64rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--red);
+        font-weight: 700;
         display: block;
+        margin-bottom: 0.55rem;
     }
-    .tip-title {
-        font-family: 'Instrument Serif', serif;
-        font-size: 1.05rem;
-        font-weight: 600;
-        margin: 0 0 0.3rem 0;
+    .strip-item .head {
+        font-family: 'Inter Tight', sans-serif;
+        font-weight: 800;
+        font-size: 1rem;
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
         color: var(--ink);
-        letter-spacing: -0.01em;
+        margin: 0 0 0.35rem 0;
+        line-height: 1.15;
     }
-    .tip-text {
-        font-size: 0.83rem;
+    .strip-item .body {
+        font-size: 0.85rem;
         line-height: 1.5;
         color: var(--muted);
         margin: 0;
     }
 
     /* ═══ SPINNER ═══ */
-    .stSpinner > div { border-top-color: var(--accent) !important; }
+    .stSpinner > div { border-top-color: var(--red) !important; }
 
     /* ═══ ALERTAS ═══ */
     [data-testid="stAlert"] {
-        border-radius: 12px !important;
-        border: 1px solid var(--border) !important;
+        border-radius: 0 !important;
+        border: 1px solid var(--ink) !important;
+        border-left: 4px solid var(--red) !important;
+        background: var(--surface) !important;
     }
 
     /* ═══ SCROLLBAR ═══ */
     ::-webkit-scrollbar { width: 10px; height: 10px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb {
-        background: #d8cebc;
-        border-radius: 10px;
-        border: 2px solid var(--bg);
+        background: var(--ink);
+        border-radius: 0;
     }
-    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--red); }
 
     /* ═══ RESPONSIVE ═══ */
     @media (max-width: 900px) {
-        .hero { flex-direction: column; align-items: flex-start; }
-        .hero-chips { justify-content: flex-start; }
-        .hero h1 { font-size: 2.3rem !important; }
-        .tips { grid-template-columns: 1fr; }
-        .st-key-canvas_wrap { box-shadow: 8px 8px 0 var(--accent); padding: 0.9rem; }
-        .result-card { box-shadow: 6px 6px 0 var(--accent); padding: 1.35rem; }
+        .hero-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+        .hero-pillars { text-align: left; }
+        .hero h1 { font-size: 2.4rem !important; }
+        .hero-num { font-size: 3.5rem; }
+        .topbar { grid-template-columns: auto 1fr; }
+        .topbar-meta { grid-column: 1 / -1; text-align: left; margin-top: 0.5rem; }
+        .bottom-strip { grid-template-columns: 1fr; }
+        .strip-item { border-right: none !important; border-bottom: 1px solid var(--line); padding: 1.1rem 0 !important; }
+        .strip-item:last-child { border-bottom: none; }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -515,7 +580,6 @@ st.markdown("""
 # UTILIDADES
 # ═══════════════════════════════════════════════════════════════
 def encode_image_to_base64(image_path):
-    """Codifica una imagen a base64 para enviarla a la API."""
     try:
         with open(image_path, "rb") as image_file:
             return base64.b64encode(image_file.read()).decode("utf-8")
@@ -528,16 +592,13 @@ def encode_image_to_base64(image_path):
 # ═══════════════════════════════════════════════════════════════
 with st.sidebar:
     st.markdown("""
-        <div class="sb-brand">
-            <div class="sb-brand-mark">🧠</div>
-            <div class="sb-brand-text">
-                <div class="name">Tablero Inteligente</div>
-                <div class="tag">Bocetos · IA · v1.0</div>
-            </div>
+        <div class="sb-head">
+            <span class="eyebrow">§ Panel</span>
+            <div class="title">Herramientas</div>
         </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("**✏️ Grosor del trazo**")
+    st.markdown("**Grosor del trazo**")
     stroke_width = st.slider(
         "Grosor del trazo",
         1, 30, 5,
@@ -546,54 +607,71 @@ with st.sidebar:
 
     st.markdown("---")
     st.caption(
-        "💡 **Consejo:** dibuja con trazos claros y bien definidos "
-        "para obtener el mejor análisis posible."
+        "**Nota** · Dibuja con trazos claros y separados para "
+        "mejorar la precisión del análisis."
     )
 
 
 # ═══════════════════════════════════════════════════════════════
-# HERO
+# TOP BAR
 # ═══════════════════════════════════════════════════════════════
 st.markdown("""
-    <div class="hero">
-        <div class="hero-left">
-            <div class="hero-kicker">Bocetos interpretados con IA</div>
-            <h1>Tablero <em>inteligente</em></h1>
-            <p>Dibuja lo que quieras: una operación, una ecuación o una figura.
-            Presiona <strong>Analizar</strong> y la IA te dirá qué ve y cómo resolverlo.</p>
-        </div>
-        <div class="hero-chips">
-            <span class="hero-chip"><span class="dot"></span> GPT-4o mini</span>
-            <span class="hero-chip"><span class="dot"></span> Reconoce matemáticas</span>
-            <span class="hero-chip"><span class="dot"></span> En español</span>
+    <div class="topbar">
+        <div class="topbar-mark">T</div>
+        <div class="topbar-title">Tablero Inteligente</div>
+        <div class="topbar-meta">
+            IA <span class="sep">/</span>
+            Visión <span class="sep">/</span>
+            Bocetos
         </div>
     </div>
 """, unsafe_allow_html=True)
 
 
 # ═══════════════════════════════════════════════════════════════
-# LAYOUT PRINCIPAL
+# HERO
+# ═══════════════════════════════════════════════════════════════
+st.markdown("""
+    <div class="hero-grid">
+        <div class="hero-num">01<span class="dot">.</span></div>
+        <div class="hero-body">
+            <span class="hero-eyebrow">Reconocimiento de bocetos</span>
+            <h1>Dibuja.<br><span class="stroke">La máquina</span><br>interpreta.</h1>
+            <p>Un lienzo simple que interpreta lo que dibujas. Resuelve operaciones, reconoce figuras y describe lo que ve — todo desde tu propio trazo.</p>
+        </div>
+        <div class="hero-pillars">
+            <span class="pillar live">Modelo activo</span>
+            <span class="pillar">GPT-4o mini</span>
+            <span class="pillar">Salida en ES</span>
+        </div>
+    </div>
+""", unsafe_allow_html=True)
+
+
+# ═══════════════════════════════════════════════════════════════
+# LAYOUT
 # ═══════════════════════════════════════════════════════════════
 col_left, col_right = st.columns([1.1, 1], gap="large")
 
 # ─── Columna izquierda: canvas ───
 with col_left:
     st.markdown("""
-        <div class="step-label">
-            <span class="num">1</span>
-            <span>Dibuja tu boceto</span>
-            <span class="line"></span>
-        </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-        <div class="canvas-label">
-            <span>📐 Lienzo 400 × 300</span>
-            <span class="hint">Trazo libre</span>
+        <div class="sec-label">
+            <span class="sec-num">1<span class="accent">.</span></span>
+            <span class="sec-title">Lienzo</span>
+            <span class="sec-hint">400 × 300</span>
         </div>
     """, unsafe_allow_html=True)
 
     with st.container(key="canvas_wrap"):
+        # Marcas de esquina
+        st.markdown("""
+            <div class="canvas-corner tl"></div>
+            <div class="canvas-corner tr"></div>
+            <div class="canvas-corner bl"></div>
+            <div class="canvas-corner br"></div>
+        """, unsafe_allow_html=True)
+
         canvas_result = st_canvas(
             fill_color="rgba(255, 165, 0, 0.3)",
             stroke_width=stroke_width,
@@ -605,18 +683,18 @@ with col_left:
             key="canvas",
         )
 
-# ─── Columna derecha: API key + botón + resultado ───
+# ─── Columna derecha: control + resultado ───
 with col_right:
     st.markdown("""
-        <div class="step-label">
-            <span class="num">2</span>
-            <span>Configura y analiza</span>
-            <span class="line"></span>
+        <div class="sec-label">
+            <span class="sec-num">2<span class="accent">.</span></span>
+            <span class="sec-title">Análisis</span>
+            <span class="sec-hint">API Key</span>
         </div>
     """, unsafe_allow_html=True)
 
     ke = st.text_input(
-        "API key de OpenAI",
+        "Clave de OpenAI",
         type="password",
         placeholder="sk-...",
     )
@@ -628,11 +706,10 @@ with col_right:
 
     st.markdown("<div style='height: 0.75rem'></div>", unsafe_allow_html=True)
 
-    analyze_button = st.button("🔍  Analizar imagen", type="secondary")
+    analyze_button = st.button("Analizar boceto →", type="secondary")
 
     st.markdown("<div style='height: 1.5rem'></div>", unsafe_allow_html=True)
 
-    # ─── Zona de resultado ───
     result_slot = st.container()
 
 
@@ -667,8 +744,7 @@ Sé claro y ordenado. Usa LaTeX para toda expresión matemática."""
 if canvas_result.image_data is not None and api_key and analyze_button:
 
     with result_slot:
-        with st.spinner("Analizando tu boceto..."):
-            # Convertir canvas a imagen y guardarla
+        with st.spinner("Analizando boceto..."):
             input_numpy_array = np.array(canvas_result.image_data)
             input_image = Image.fromarray(input_numpy_array.astype('uint8'), 'RGBA')
             input_image.save('img.png')
@@ -676,7 +752,7 @@ if canvas_result.image_data is not None and api_key and analyze_button:
             base64_image = encode_image_to_base64("img.png")
 
             if base64_image is None:
-                st.error("No se pudo procesar la imagen del canvas.")
+                st.error("No se pudo procesar la imagen del lienzo.")
             else:
                 try:
                     response = openai.chat.completions.create(
@@ -709,12 +785,11 @@ if canvas_result.image_data is not None and api_key and analyze_button:
 
                     content = response.choices[0].message.content or ""
 
-                    # Tarjeta de resultado con encabezado
                     st.markdown("""
-                        <div class="result-card">
+                        <div class="result-frame">
                             <div class="result-head">
-                                <span class="dot"></span>
-                                <span>Análisis del boceto</span>
+                                <span class="title">Resultado</span>
+                                <span class="meta">GPT-4o mini</span>
                             </div>
                     """, unsafe_allow_html=True)
 
@@ -725,42 +800,42 @@ if canvas_result.image_data is not None and api_key and analyze_button:
                     st.session_state.mi_respuesta = content
 
                 except Exception as e:
-                    st.error(f"Ocurrió un error: {e}")
+                    st.error(f"Error: {e}")
 
 elif not api_key and analyze_button:
     with result_slot:
-        st.warning("⚠️ Por favor ingresa tu API key de OpenAI para continuar.")
+        st.warning("⚠️ Ingresa tu API key de OpenAI para continuar.")
 
 elif not analyze_button:
     with result_slot:
         st.markdown("""
-            <div class="empty-state">
-                <span class="icon">🎨</span>
-                <p class="title">Esperando tu boceto</p>
-                <p class="text">Dibuja algo en el lienzo, ingresa tu clave y presiona <strong>Analizar imagen</strong> para ver el resultado aquí.</p>
+            <div class="empty-frame">
+                <span class="tag">— Esperando</span>
+                <p class="title">Sin boceto<br>por <span class="accent">analizar</span></p>
+                <p class="text">Dibuja en el lienzo, ingresa tu clave y presiona el botón para ver aquí el resultado.</p>
             </div>
         """, unsafe_allow_html=True)
 
 
 # ═══════════════════════════════════════════════════════════════
-# TIPS AL PIE
+# BOTTOM STRIP
 # ═══════════════════════════════════════════════════════════════
 st.markdown("""
-    <div class="tips">
-        <div class="tip">
-            <span class="tip-icon">✏️</span>
-            <h4 class="tip-title">Traza claro</h4>
-            <p class="tip-text">Dibuja con líneas definidas y bien separadas. Evita trazos encimados que puedan confundir al modelo.</p>
+    <div class="bottom-strip">
+        <div class="strip-item">
+            <span class="idx">01 — Trazo</span>
+            <p class="head">Líneas limpias</p>
+            <p class="body">Dibuja con trazos definidos y bien separados. Evita encimar líneas que puedan confundir al modelo.</p>
         </div>
-        <div class="tip">
-            <span class="tip-icon">➗</span>
-            <h4 class="tip-title">Prueba con matemáticas</h4>
-            <p class="tip-text">Escribe una operación como 2+2, una ecuación como x²=9 o dibuja un triángulo, círculo o rectángulo.</p>
+        <div class="strip-item">
+            <span class="idx">02 — Matemáticas</span>
+            <p class="head">Operaciones y figuras</p>
+            <p class="body">Escribe una operación como 2+2, una ecuación como x²=9, o dibuja triángulos, círculos y rectángulos.</p>
         </div>
-        <div class="tip">
-            <span class="tip-icon">💡</span>
-            <h4 class="tip-title">Cosas no matemáticas</h4>
-            <p class="tip-text">Si dibujas algo diferente, la IA describirá qué ve: formas, objetos, símbolos y lo que representan.</p>
+        <div class="strip-item">
+            <span class="idx">03 — Libre</span>
+            <p class="head">Cualquier cosa</p>
+            <p class="body">Si dibujas algo distinto, la IA describirá qué ve: formas, objetos, símbolos y su posible significado.</p>
         </div>
     </div>
 """, unsafe_allow_html=True)
