@@ -36,7 +36,6 @@ st.markdown("""
         --blue:     #1d4ed8;
     }
 
-    /* ═══ BASE ═══ */
     html, body, [class*="css"], .stApp, button, input, textarea, select {
         font-family: 'Inter', sans-serif !important;
         color: var(--ink) !important;
@@ -49,7 +48,6 @@ st.markdown("""
         color: var(--ink) !important;
     }
 
-    /* ═══ FONDO CON RETÍCULA BAUHAUS ═══ */
     .stApp {
         background-color: var(--bg) !important;
         background-image:
@@ -135,7 +133,7 @@ st.markdown("""
         border-radius: 0 !important;
     }
 
-    /* ═══ HEADER BANNER ═══ */
+    /* ═══ BANNER ═══ */
     .banner {
         background: var(--ink);
         color: #ffffff !important;
@@ -204,7 +202,7 @@ st.markdown("""
     }
     .banner-meta b { color: var(--yellow) !important; }
 
-    /* ═══ HERO CON GEOMETRÍA ═══ */
+    /* ═══ HERO ═══ */
     .hero {
         display: grid;
         grid-template-columns: 90px 1fr auto;
@@ -213,10 +211,7 @@ st.markdown("""
         padding-bottom: 2rem;
         margin-bottom: 2.5rem;
         border-bottom: 3px solid var(--ink);
-        position: relative;
     }
-
-    /* Bloque geométrico a la izquierda */
     .hero-shape {
         position: relative;
         width: 90px;
@@ -224,35 +219,28 @@ st.markdown("""
     }
     .hero-shape .circle {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 60px;
-        height: 60px;
+        top: 0; left: 0;
+        width: 60px; height: 60px;
         background: var(--red);
         border-radius: 50%;
         border: 3px solid var(--ink);
     }
     .hero-shape .square {
         position: absolute;
-        top: 40px;
-        left: 30px;
-        width: 55px;
-        height: 55px;
+        top: 40px; left: 30px;
+        width: 55px; height: 55px;
         background: var(--yellow);
         border: 3px solid var(--ink);
         mix-blend-mode: multiply;
     }
     .hero-shape .triangle {
         position: absolute;
-        bottom: 0;
-        left: 5px;
-        width: 0;
-        height: 0;
+        bottom: 0; left: 5px;
+        width: 0; height: 0;
         border-left: 28px solid transparent;
         border-right: 28px solid transparent;
         border-bottom: 45px solid var(--blue);
     }
-
     .hero-body { padding-top: 0.35rem; }
     .hero-eyebrow {
         display: inline-block;
@@ -267,7 +255,6 @@ st.markdown("""
         border: 2px solid var(--ink);
         margin-bottom: 1rem;
         transform: rotate(-1.5deg);
-        display: inline-block;
     }
     .hero h1 {
         font-family: 'Space Grotesk', sans-serif !important;
@@ -279,14 +266,8 @@ st.markdown("""
         color: var(--ink) !important;
         text-transform: uppercase;
     }
-    .hero h1 .blue {
-        color: var(--blue) !important;
-        font-weight: 700;
-    }
-    .hero h1 .red {
-        color: var(--red) !important;
-        font-weight: 700;
-    }
+    .hero h1 .blue { color: var(--blue) !important; }
+    .hero h1 .red { color: var(--red) !important; }
     .hero h1 .underline {
         background: linear-gradient(transparent 60%, var(--yellow) 60%);
         padding: 0 0.15em;
@@ -299,8 +280,6 @@ st.markdown("""
         max-width: 540px;
         font-weight: 400;
     }
-
-    /* Tarjetas tipo "specs" a la derecha */
     .hero-specs {
         display: flex;
         flex-direction: column;
@@ -321,8 +300,7 @@ st.markdown("""
     .spec:nth-child(3) { transform: rotate(0.6deg); }
     .spec:hover { transform: rotate(0deg) scale(1.02); }
     .spec-dot {
-        width: 12px;
-        height: 12px;
+        width: 12px; height: 12px;
         border-radius: 50%;
         border: 2px solid var(--ink);
         flex-shrink: 0;
@@ -358,8 +336,7 @@ st.markdown("""
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 30px;
-        height: 30px;
+        width: 30px; height: 30px;
         background: var(--ink);
         color: #ffffff;
         font-family: 'Space Grotesk', sans-serif;
@@ -368,7 +345,6 @@ st.markdown("""
         border-radius: 50%;
         flex-shrink: 0;
     }
-    .sec-label:nth-of-type(1) .sec-badge { background: var(--red); }
     .sec-text {
         font-family: 'Space Grotesk', sans-serif;
         font-size: 0.78rem;
@@ -398,30 +374,6 @@ st.markdown("""
     }
     .st-key-canvas_wrap:hover {
         box-shadow: 10px 10px 0 var(--blue);
-    }
-    .st-key-canvas_wrap::before {
-        content: '';
-        position: absolute;
-        top: -3px;
-        left: -3px;
-        width: 20px;
-        height: 20px;
-        background: var(--yellow);
-        border: 3px solid var(--ink);
-        border-right: none;
-        border-bottom: none;
-    }
-    .st-key-canvas_wrap::after {
-        content: '';
-        position: absolute;
-        bottom: -3px;
-        right: -3px;
-        width: 20px;
-        height: 20px;
-        background: var(--yellow);
-        border: 3px solid var(--ink);
-        border-left: none;
-        border-top: none;
     }
     .st-key-canvas_wrap [data-testid="stCanvas"] {
         margin: 0 auto;
@@ -487,7 +439,6 @@ st.markdown("""
     }
     .stButton > button:hover {
         background: var(--yellow) !important;
-        color: var(--ink) !important;
         transform: translate(-2px, -2px);
         box-shadow: 9px 9px 0 var(--ink) !important;
     }
@@ -497,21 +448,21 @@ st.markdown("""
         box-shadow: 4px 4px 0 var(--ink) !important;
     }
 
-    /* ═══ RESULT FRAME ═══ */
-    .result-frame {
-        background: var(--surface);
-        border: 3px solid var(--ink);
-        padding: 1.6rem 1.75rem;
-        margin-top: 1rem;
+    /* ═══ RESULT FRAME (ahora aplicado al container con key) ═══ */
+    .st-key-result_wrap {
+        background: var(--surface) !important;
+        border: 3px solid var(--ink) !important;
+        padding: 1.9rem 1.75rem 1.6rem 1.75rem !important;
         position: relative;
-        box-shadow: 10px 10px 0 var(--yellow);
+        box-shadow: 10px 10px 0 var(--yellow) !important;
+        overflow: hidden;
     }
-    .result-frame::before {
+    .st-key-result_wrap::before {
         content: '';
         position: absolute;
-        top: -3px;
-        left: -3px;
-        right: -3px;
+        top: 0;
+        left: 0;
+        right: 0;
         height: 12px;
         background: repeating-linear-gradient(
             90deg,
@@ -522,12 +473,55 @@ st.markdown("""
             var(--blue) 60px 75px,
             var(--ink) 75px 90px
         );
+        z-index: 1;
     }
+    .st-key-result_wrap > div:first-child {
+        padding-top: 0.6rem;
+    }
+
+    /* Markdown dentro del result-wrap */
+    .st-key-result_wrap .stMarkdown,
+    .st-key-result_wrap [data-testid="stMarkdownContainer"] {
+        background: transparent !important;
+    }
+    .st-key-result_wrap .stMarkdown p,
+    .st-key-result_wrap .stMarkdown li,
+    .st-key-result_wrap [data-testid="stMarkdownContainer"] p,
+    .st-key-result_wrap [data-testid="stMarkdownContainer"] li {
+        font-size: 1rem !important;
+        line-height: 1.7 !important;
+        color: var(--ink) !important;
+        margin-bottom: 0.75rem !important;
+    }
+    .st-key-result_wrap .stMarkdown h1,
+    .st-key-result_wrap .stMarkdown h2,
+    .st-key-result_wrap .stMarkdown h3,
+    .st-key-result_wrap .stMarkdown h4 {
+        font-family: 'Space Grotesk', sans-serif !important;
+        text-transform: uppercase !important;
+        letter-spacing: -0.01em !important;
+        margin: 1.2rem 0 0.65rem 0 !important;
+        color: var(--ink) !important;
+    }
+    .st-key-result_wrap .stMarkdown strong {
+        font-weight: 700 !important;
+        color: var(--ink) !important;
+    }
+    .st-key-result_wrap .stMarkdown ul,
+    .st-key-result_wrap .stMarkdown ol {
+        padding-left: 1.35rem !important;
+        margin: 0.6rem 0 1rem 0 !important;
+    }
+    .st-key-result_wrap .stMarkdown li {
+        margin-bottom: 0.35rem !important;
+    }
+
+    /* Header interno del resultado */
     .result-head {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0.75rem 0 0.9rem 0;
+        padding: 0.6rem 0 0.9rem 0;
         margin-bottom: 1.1rem;
         border-bottom: 2px solid var(--ink);
     }
@@ -566,15 +560,8 @@ st.markdown("""
         border: 2px solid var(--ink);
     }
 
-    /* Markdown del resultado */
-    .result-frame .stMarkdown p,
-    .result-frame .stMarkdown li {
-        font-size: 1rem !important;
-        line-height: 1.65 !important;
-        color: var(--ink) !important;
-    }
-
     /* LaTeX */
+    .st-key-result_wrap .katex-display,
     .katex-display {
         background: #f7f2e5 !important;
         border: 2px solid var(--ink) !important;
@@ -625,7 +612,7 @@ st.markdown("""
         max-width: 340px;
     }
 
-    /* ═══ TIPS AL PIE ═══ */
+    /* ═══ TIPS ═══ */
     .tips {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -642,19 +629,15 @@ st.markdown("""
     .tip:nth-child(1) { box-shadow: 6px 6px 0 var(--red); }
     .tip:nth-child(2) { box-shadow: 6px 6px 0 var(--yellow); }
     .tip:nth-child(3) { box-shadow: 6px 6px 0 var(--blue); }
-    .tip:hover {
-        transform: translate(-3px, -3px);
-    }
+    .tip:hover { transform: translate(-3px, -3px); }
     .tip:nth-child(1):hover { box-shadow: 9px 9px 0 var(--red); }
     .tip:nth-child(2):hover { box-shadow: 9px 9px 0 var(--yellow); }
     .tip:nth-child(3):hover { box-shadow: 9px 9px 0 var(--blue); }
-
     .tip-num {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 28px;
-        height: 28px;
+        width: 28px; height: 28px;
         background: var(--ink);
         color: #ffffff;
         font-family: 'Space Grotesk', sans-serif;
@@ -682,10 +665,8 @@ st.markdown("""
         margin: 0;
     }
 
-    /* ═══ SPINNER ═══ */
     .stSpinner > div { border-top-color: var(--red) !important; }
 
-    /* ═══ ALERTAS ═══ */
     [data-testid="stAlert"] {
         border-radius: 0 !important;
         border: 3px solid var(--ink) !important;
@@ -693,7 +674,6 @@ st.markdown("""
         background: var(--surface) !important;
     }
 
-    /* ═══ SCROLLBAR ═══ */
     ::-webkit-scrollbar { width: 12px; height: 12px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb {
@@ -702,7 +682,6 @@ st.markdown("""
     }
     ::-webkit-scrollbar-thumb:hover { background: var(--red); }
 
-    /* ═══ RESPONSIVE ═══ */
     @media (max-width: 900px) {
         .hero { grid-template-columns: 60px 1fr; gap: 1rem; }
         .hero-shape { width: 60px; height: 90px; }
@@ -757,7 +736,7 @@ with st.sidebar:
 
 
 # ═══════════════════════════════════════════════════════════════
-# BANNER SUPERIOR
+# BANNER
 # ═══════════════════════════════════════════════════════════════
 st.markdown("""
     <div class="banner">
@@ -824,7 +803,7 @@ col_left, col_right = st.columns([1.1, 1], gap="large")
 with col_left:
     st.markdown("""
         <div class="sec-label">
-            <span class="sec-badge">1</span>
+            <span class="sec-badge" style="background: var(--red);">1</span>
             <span class="sec-text">Lienzo</span>
             <span class="sec-line"></span>
         </div>
@@ -846,7 +825,7 @@ with col_left:
 with col_right:
     st.markdown("""
         <div class="sec-label">
-            <span class="sec-badge">2</span>
+            <span class="sec-badge" style="background: var(--blue);">2</span>
             <span class="sec-text">Análisis</span>
             <span class="sec-line"></span>
         </div>
@@ -944,17 +923,16 @@ if canvas_result.image_data is not None and api_key and analyze_button:
 
                     content = response.choices[0].message.content or ""
 
-                    st.markdown("""
-                        <div class="result-frame">
+                    # ─── CONTAINER CON KEY: aquí SÍ vive todo el resultado ───
+                    with st.container(key="result_wrap"):
+                        st.markdown("""
                             <div class="result-head">
                                 <span class="title">Resultado</span>
                                 <span class="meta">GPT-4o mini</span>
                             </div>
-                    """, unsafe_allow_html=True)
+                        """, unsafe_allow_html=True)
 
-                    st.markdown(content, unsafe_allow_html=True)
-
-                    st.markdown("</div>", unsafe_allow_html=True)
+                        st.markdown(content, unsafe_allow_html=True)
 
                     st.session_state.mi_respuesta = content
 
